@@ -35,14 +35,28 @@ io.on('connection', (socket) => {
 
     socket.on("red", (data) => {
         console.log( "red event received" );
-        io.sockets.emit("color_change", {r:255, g:0, b:0});
+        io.sockets.emit("Moving", true);
+        console.log( "end of red event" );
     });
 
     socket.on("blue", (data) => {
         console.log( "blue event received" );
-        io.sockets.emit("color_change", {r:0, g:0, b:255});
+        io.sockets.emit("Moving", false);
+
     });
 
+
+    socket.on("left", (data) => {
+        console.log( "red event received" );
+        io.sockets.emit("color_change", {r:255, g:0, b:0});
+    });
+
+    socket.on("right", (data) => {
+        console.log( "red event received" );
+        io.sockets.emit("color_change", {r:255, g:0, b:0});
+    });
+
+    
     //infinite loop with a millisecond delay (but only want one loop running ...)
     //a way to update all clients simulatenously every frame i.e. updating position, rotation ...
     // if (setIntervalFunc == null) {

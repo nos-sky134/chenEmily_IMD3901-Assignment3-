@@ -35,7 +35,11 @@
                             animation__click="property:position.y; from:0.55; to:0.6; startEvents:click; dur:300" shadow></a-entity>
                 <a-entity position="0 0.3 0" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;" material="color:rgb(255, 255, 255)" shadow></a-entity>
             </a-entity>
+
+            <a-entity id="rope" position="0.0 0.0 0.5" geometry="primitive:box; width:0.5; depth:0.5; height:0.5;" material="color:red;"></a-entity>
+
         </a-scene>
+
 
         <!-- this is magic code created when the node server runs -->
         <!-- putting at teh bottom of body to let body load first before we try to query for elements -->
@@ -43,27 +47,64 @@
         <script src="/socket.io/socket.io.js"></script>
         <script>
             const socket = io();
-
+            
+            var myVar= setInterval(startClock, 1000);
+            
+            
             socket.on('connect', (userData) => {
                 console.log('I exist!');
 
                 //put code here so that we know that socket.io has initailized ...
                 document.querySelector('#red_button').querySelector('.button').addEventListener('click', function(){
-                    socket.emit('red');
+                    socket.emit("red");
+                    //xPos= xPos+0.5;
                 });
 
                 document.querySelector('#blue_button').querySelector('.button').addEventListener('click', function(){
-                    socket.emit('blue');
+                    socket.emit("blue");
+                    //xPos= xPos+0.5;
                 });
+
+
             });
 
             //listen to event from server
             socket.on('color_change', (data) => {
                 let colorStr = 'rgb(' + data.r + ',' + data.g + ',' + data.b + ')';
                 console.log('color_change:' + colorStr);
-                //document.body.style.backgroundColor = colorStr;
+                document.body.style.backgroundColor = colorStr;
                 document.querySelector('a-scene').setAttribute('background', {color:colorStr});
+                
+                //document.querySelector('rope').setAttribute('position',  {x: xPos, y: yPos, z: zPos});
             });
+
+            socket.on('Moving',(direction) => {
+            if (direction){
+
+            // document.getElementById("MovingItem").setAttribute('position', '-3 0.59 -3');
+            MovingBox = document.getElementById("rope"); 
+            currentPos =  MovingBox.getAttribute('position');
+            currentPos.x = currentPos.x + 0.5; 
+            //MovingBox.setAttribute('position', '-3 0.59 -3')
+            MovingBox.setAttribute('position', currentPos)
+
+            console.log('changed position');
+
+            }
+            else {
+            // document.getElementById("MovingItem").setAttribute('position', '-3 0.59 -3');
+            MovingBox = document.getElementById("rope"); 
+            currentPos =  MovingBox.getAttribute('position');
+            currentPos.x = currentPos.x - 0.5; 
+            //MovingBox.setAttribute('position', '-3 0.59 -3')
+            MovingBox.setAttribute('position', currentPos)
+
+            console.log('changed position');
+            }
+            
+        });
+
+
         </script>
     </body>
 </html>
