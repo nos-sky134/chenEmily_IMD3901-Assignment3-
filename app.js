@@ -56,12 +56,10 @@ io.on('connection', (socket) => {
     });
 
     socket.on("touchGround", (data) => {
-        console.log( "move down" );
         io.sockets.emit("loseState",true);
     });
     
     socket.on("notTouchGround", (data) => {
-        console.log( "move down" );
         io.sockets.emit("loseState",false);
     });
     
