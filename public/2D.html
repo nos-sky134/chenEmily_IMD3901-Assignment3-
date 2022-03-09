@@ -16,7 +16,7 @@
                 <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects:.interactive"></a-entity>
             </a-entity>
 
-            <a-entity class="ground"  geometry="primitive:plane; width:14; height:14;" material="color:white;" position="0 0.01 0" rotation="-90 0 0"></a-entity>
+            <a-entity class="ground"  geometry="primitive:plane; width:14; height:14;" material="color:white;" position="0 0.0 0" rotation="-90 0 0"></a-entity>
 
             <!-- red button -->
             <a-entity id="red_button" position="2 0.6 -1">
@@ -69,52 +69,44 @@
             });
 
             function checkSelect(){
-                socket.emit('down');
+                socket.emit('touchGround');
+
             }
             
-            socket.on('Gravity',(On) => {
+            socket.on('Gravity',(On, value) => {
                 if(On){
                 MovingBox = document.getElementById("rope");
                 currentPos =  MovingBox.getAttribute('position');
-                currentPos.y = currentPos.y + 2.5;
+                currentPos.y = currentPos.y + value;
                 MovingBox.setAttribute('position', currentPos);
                 console.log('moved up');
             }
             else{
                 MovingBox = document.getElementById("rope");
                 currentPos =  MovingBox.getAttribute('position');
-                currentPos.y = currentPos.y - 0.04;
+                currentPos.y = currentPos.y - value;
                 MovingBox.setAttribute('position', currentPos);
                 console.log('moved down');
             }
             });
 
-            socket.on('movingRight',(direction) => {
-            if (direction){
- 
-            // document.getElementById("MovingItem").setAttribute('position', '-3 0.59 -3');
-            MovingBox = document.getElementById("rope");
-            currentPos =  MovingBox.getAttribute('position');
-            currentPos.x = currentPos.x + 0.6;
-            //MovingBox.setAttribute('position', '-3 0.59 -3')
-            MovingBox.setAttribute('position', currentPos)
- 
-            console.log('changed position right');
- 
+            function checkSelect(){
+                MovingBox = document.getElementById("rope");
+                currentPos =  MovingBox.getAttribute('position');
+                if(currentPos.y<0.0){
+                    socket.emit('touchGround');
+                }
+                else{
+                    socket.emit('down');
+                }
+
             }
-            else {
-            // document.getElementById("MovingItem").setAttribute('position', '-3 0.59 -3');
-            MovingBox = document.getElementById("rope");
-            currentPos =  MovingBox.getAttribute('position');
-            currentPos.x = currentPos.x - 0.6;
-            //MovingBox.setAttribute('position', '-3 0.59 -3')
-            MovingBox.setAttribute('position', currentPos)
- 
-            console.log('changed position left');
+            
+            socket.on('loseState',(lose) => {
+                if(lose){
+                console.log('You lose');
             }
-           
-        });
- 
+            });
 
         </script>
     </body>
