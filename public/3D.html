@@ -78,28 +78,23 @@
                 document.body.style.backgroundColor = colorStr;
                 document.querySelector('a-scene').setAttribute('background', {color:colorStr});
                
-                //document.querySelector('rope').setAttribute('position',  {x: xPos, y: yPos, z: zPos});
             });
  
             socket.on('movingRight',(direction) => {
             if (direction){
  
-            // document.getElementById("MovingItem").setAttribute('position', '-3 0.59 -3');
             MovingBox = document.getElementById("rope");
             currentPos =  MovingBox.getAttribute('position');
             currentPos.x = currentPos.x + 0.6;
-            //MovingBox.setAttribute('position', '-3 0.59 -3')
             MovingBox.setAttribute('position', currentPos)
  
             console.log('changed position right');
  
             }
             else {
-            // document.getElementById("MovingItem").setAttribute('position', '-3 0.59 -3');
             MovingBox = document.getElementById("rope");
             currentPos =  MovingBox.getAttribute('position');
             currentPos.x = currentPos.x - 0.6;
-            //MovingBox.setAttribute('position', '-3 0.59 -3')
             MovingBox.setAttribute('position', currentPos)
  
             console.log('changed position left');
@@ -124,14 +119,12 @@
             socket.on('winState',(val) => {
                 if(val==1.0){
                 groungObject = document.getElementById("ground2");
-                //groungObject.setAttribute('material', 'color', rgb(' 100 ',' 0.0 ',' 0.0'));
                 groungObject.setAttribute('material', 'color', 'pink');
                 console.log('You lose!');
             }
             else if(val==2.0){
                 groungObject = document.getElementById("ground2");
-                //groungObject.setAttribute('material', 'color', rgb(' 100 ',' 0.0 ',' 0.0'));
-                groungObject.setAttribute('material', 'color', 'blue');
+                groungObject.setAttribute('material', 'color', 'skyblue');
                 console.log('You lose!');
 
             }
