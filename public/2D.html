@@ -36,7 +36,7 @@
                 <a-entity position="0 0.3 0" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;" material="color:rgb(255, 255, 255)" shadow></a-entity>
             </a-entity>
 
-            <a-entity id="rope" position="0.0 2.0 0.5" geometry="primitive:box; width:0.5; depth:0.5; height:0.5;" material="color:red;"></a-entity>
+            <a-entity id="rope" position="0.0 5.0 0.5" geometry="primitive:box; width:0.5; depth:0.5; height:0.5;" material="color:red;"></a-entity>
 
         </a-scene>
 
@@ -49,46 +49,72 @@
 
     
             const socket = io();
-            
+            var selectionFunc= setInterval(checkSelect, 41);
             
             socket.on('connect', (userData) => {
                 console.log('I exist!');
 
                 //put code here so that we know that socket.io has initailized ...
                 document.querySelector('#red_button').querySelector('.button').addEventListener('click', function(){
-                    socket.emit("red");
-                    //xPos= xPos+0.5;
+                    socket.emit('up');
+                    console.log('red Button');
                 });
 
                 document.querySelector('#blue_button').querySelector('.button').addEventListener('click', function(){
-                    socket.emit("blue");
-                    //xPos= xPos+0.5;
+                    socket.emit('up');
+                    console.log('blue Button');
                 });
 
-                var selectionFunc= setInterval(checkSelect, 41);
 
             });
 
+            function checkSelect(){
+                socket.emit('down');
+            }
             
             socket.on('Gravity',(On) => {
                 if(On){
-                MovingBox = document.getElementById("rope"); 
+                MovingBox = document.getElementById("rope");
                 currentPos =  MovingBox.getAttribute('position');
-                currentPos.y = currentPos.y + 0.6; 
+                currentPos.y = currentPos.y + 2.5;
+                MovingBox.setAttribute('position', currentPos);
+                console.log('moved up');
+            }
+            else{
+                MovingBox = document.getElementById("rope");
+                currentPos =  MovingBox.getAttribute('position');
+                currentPos.y = currentPos.y - 0.04;
+                MovingBox.setAttribute('position', currentPos);
+                console.log('moved down');
             }
             });
 
-            
-            function checkSelect() {
-                MovingBox = document.getElementById("rope"); 
-            objectPos =  MovingBox.getAttribute('position');
-             0.6; 
-            //check the mushrooms to see if it is on the ground
-                if( objectPos.y>0){
-                    objectPos.y-=0.07;
-                }
+            socket.on('movingRight',(direction) => {
+            if (direction){
+ 
+            // document.getElementById("MovingItem").setAttribute('position', '-3 0.59 -3');
+            MovingBox = document.getElementById("rope");
+            currentPos =  MovingBox.getAttribute('position');
+            currentPos.x = currentPos.x + 0.6;
+            //MovingBox.setAttribute('position', '-3 0.59 -3')
+            MovingBox.setAttribute('position', currentPos)
+ 
+            console.log('changed position right');
+ 
             }
-
+            else {
+            // document.getElementById("MovingItem").setAttribute('position', '-3 0.59 -3');
+            MovingBox = document.getElementById("rope");
+            currentPos =  MovingBox.getAttribute('position');
+            currentPos.x = currentPos.x - 0.6;
+            //MovingBox.setAttribute('position', '-3 0.59 -3')
+            MovingBox.setAttribute('position', currentPos)
+ 
+            console.log('changed position left');
+            }
+           
+        });
+ 
 
         </script>
     </body>

@@ -45,6 +45,15 @@ io.on('connection', (socket) => {
 
     });
 
+    socket.on("up", (data) => {
+        console.log( "move up" );
+        io.sockets.emit("Gravity",true);
+    });
+
+    socket.on("down", (data) => {
+        console.log( "move down" );
+        io.sockets.emit("Gravity",false);
+    });
 
     socket.on("left", (data) => {
         console.log( "red event received" );
