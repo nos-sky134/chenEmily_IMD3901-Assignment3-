@@ -35,13 +35,13 @@ io.on('connection', (socket) => {
 
     socket.on("red", (data) => {
         console.log( "red event received" );
-        io.sockets.emit("Moving", true);
+        io.sockets.emit("movingRight", false);
         console.log( "end of red event" );
     });
 
     socket.on("blue", (data) => {
         console.log( "blue event received" );
-        io.sockets.emit("Moving", false);
+        io.sockets.emit("movingRight",true);
 
     });
 
