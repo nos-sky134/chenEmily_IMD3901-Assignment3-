@@ -35,13 +35,13 @@ io.on('connection', (socket) => {
 
     socket.on("red", (data) => {
         console.log( "red event received" );
-        io.sockets.emit("movingRight", false);
+        io.sockets.emit("movingRight", true);
         console.log( "end of red event" );
     });
 
     socket.on("blue", (data) => {
         console.log( "blue event received" );
-        io.sockets.emit("movingRight",true);
+        io.sockets.emit("movingRight",false);
 
     });
 
@@ -60,6 +60,24 @@ io.on('connection', (socket) => {
         io.sockets.emit("loseState",true);
     });
     
+    socket.on("notTouchGround", (data) => {
+        console.log( "move down" );
+        io.sockets.emit("loseState",false);
+    });
+    
+    socket.on("blueWins", (data) => {
+        io.sockets.emit("winState", 1.0);
+    });
+
+    socket.on("redWins", (data) => {
+        io.sockets.emit("winState", 2.0);
+    });
+    
+
+    socket.on("beginMove", (data) => {
+        console.log( "begin game!" );
+        io.sockets.emit("Gravity",true, 5.0);
+    });
 
     socket.on("left", (data) => {
         console.log( "red event received" );

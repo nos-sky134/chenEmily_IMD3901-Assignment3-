@@ -36,7 +36,7 @@
                 <a-entity position="0 0.3 0" geometry="primitive:box; width:0.5; depth:0.5; height:0.6;" material="color:rgb(255, 255, 255)" shadow></a-entity>
             </a-entity>
 
-            <a-entity id="rope" position="0.0 5.0 0.5" geometry="primitive:box; width:0.5; depth:0.5; height:0.5;" material="color:red;"></a-entity>
+            <a-entity id="rope" position="0.0 0.0 0.5" geometry="primitive:box; width:0.5; depth:0.5; height:0.5;" material="color:red;"></a-entity>
 
         </a-scene>
 
@@ -47,7 +47,7 @@
         <script src="/socket.io/socket.io.js"></script>
         <script>
 
-    
+            firstTime= true; 
             const socket = io();
             var selectionFunc= setInterval(checkSelect, 41);
             
@@ -56,50 +56,57 @@
 
                 //put code here so that we know that socket.io has initailized ...
                 document.querySelector('#red_button').querySelector('.button').addEventListener('click', function(){
-                    socket.emit('up');
+                    if(firstTime){
+                        socket.emit('beginMove');
+                        firstTime= false;
+                    }
+                    else{
+                        socket.emit('up');
                     console.log('red Button');
+                    }
+
                 });
 
                 document.querySelector('#blue_button').querySelector('.button').addEventListener('click', function(){
-                    socket.emit('up');
-                    console.log('blue Button');
+                    if(firstTime){
+                        socket.emit('beginMove');
+                        firstTime= false;
+                    }
+                    else{
+                        socket.emit('up');
+                        console.log('blue Button');
+                    }
+
+                    
                 });
-
-
             });
-
-            function checkSelect(){
-                socket.emit('touchGround');
-
-            }
             
             socket.on('Gravity',(On, value) => {
-                if(On){
                 MovingBox = document.getElementById("rope");
                 currentPos =  MovingBox.getAttribute('position');
+                if(On){
                 currentPos.y = currentPos.y + value;
                 MovingBox.setAttribute('position', currentPos);
                 console.log('moved up');
             }
             else{
-                MovingBox = document.getElementById("rope");
-                currentPos =  MovingBox.getAttribute('position');
+                if(currentPos.y>0.0){
                 currentPos.y = currentPos.y - value;
                 MovingBox.setAttribute('position', currentPos);
                 console.log('moved down');
+                }
+                else{
+                    socket.emit('touchGround');
+                }
             }
             });
 
             function checkSelect(){
                 MovingBox = document.getElementById("rope");
                 currentPos =  MovingBox.getAttribute('position');
-                if(currentPos.y<0.0){
-                    socket.emit('touchGround');
-                }
-                else{
+                if(currentPos.y>0.0){
                     socket.emit('down');
                 }
-
             }
             
             socket.on('loseState',(lose) => {
@@ -109,6 +116,7 @@
                 groungObject.setAttribute('material', 'color', 'pink');
                 console.log('You lose!');
             }
+
             });
 
         </script>

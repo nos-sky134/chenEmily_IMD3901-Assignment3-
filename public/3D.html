@@ -16,7 +16,7 @@
                 <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects:.interactive"></a-entity>
             </a-entity>
  
-            <a-entity class="ground"  geometry="primitive:plane; width:14; height:14;" material="color:white;" position="0 0.01 0" rotation="-90 0 0"></a-entity>
+            <a-entity id="ground2"  geometry="primitive:plane; width:14; height:14;" material="color:white;" position="0 0.01 0" rotation="-90 0 0"></a-entity>
  
             <!-- red button -->
             <a-entity id="red_button" position="2 0.6 -1">
@@ -50,7 +50,7 @@
  
  
             const socket = io();
-           
+            var checkWin= setInterval(checkWinState, 41);
            
             socket.on('connect', (userData) => {
                 console.log('I exist!');
@@ -69,7 +69,7 @@
  
             });
 
-           
+    
  
             //listen to event from server
             socket.on('color_change', (data) => {
@@ -107,6 +107,35 @@
            
         });
  
+        function checkWinState(){
+            MovingBox = document.getElementById("rope");
+            currentPos =  MovingBox.getAttribute('position');
+            if(currentPos.x>2.0){
+                socket.emit("blueWins");
+                console.log('tickLeft');
+            }
+            else if(currentPos.x<-2.0){
+                socket.emit("redWins");
+                console.log('tickRight');
+            }
+            
+            }
+
+            socket.on('winState',(val) => {
+                if(val==1.0){
+                groungObject = document.getElementById("ground2");
+                //groungObject.setAttribute('material', 'color', rgb(' 100 ',' 0.0 ',' 0.0'));
+                groungObject.setAttribute('material', 'color', 'pink');
+                console.log('You lose!');
+            }
+            else if(val==2.0){
+                groungObject = document.getElementById("ground2");
+                //groungObject.setAttribute('material', 'color', rgb(' 100 ',' 0.0 ',' 0.0'));
+                groungObject.setAttribute('material', 'color', 'blue');
+                console.log('You lose!');
+
+            }
+        });
  
         </script>
     </body>
